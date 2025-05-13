@@ -16,5 +16,10 @@ class HealthRegistration(models.Model):
     past_surgeries = models.TextField(blank=True)
     registered_at = models.DateTimeField(auto_now_add=True)
 
+    class Meta:
+        indexes = [
+            models.Index(fields=['user']),
+        ]
+
     def __str__(self):
         return f"{self.user.username} - {self.full_name}"

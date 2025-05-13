@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt  # **TEMPORARY - FOR TESTING ONLY**
 from accounts.forms import HealthRegistrationForm
+from accounts.models import HealthRegistration
 import traceback
 
 logger = logging.getLogger(__name__)
@@ -18,17 +19,17 @@ def health_register_view(request):
         logger.info(f"Request body: {request.body}")  # Log the raw request body
         data = json.loads(request.body)
         logger.info(f"Parsed data: {data}")
-        form = HealthRegistrationForm(data)
 
+        form = HealthRegistrationForm(data)
         if form.is_valid():
             instance = form.save(commit=False)
-            instance.user = request.user  # ✅ Assign the user here
+            instance.user = request.user
             instance.save()
-            logger.info("Form is valid")
-            logger.info(f"Form cleaned data: {form.cleaned_data}")  # Log cleaned data
-            form.save()
-            logger.info("Form saved successfully")
-            return JsonResponse({'message': 'Health registration submitted successfully'})
+            logger.info(f"Created new health registration for user {request.user.username}")
+            return JsonResponse({
+                'message': "Health registration submitted successfully",
+                'is_update': False
+            })
         else:
             logger.warning(f"Form errors: {form.errors}")
             return JsonResponse({'errors': form.errors}, status=400)

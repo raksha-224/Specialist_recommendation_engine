@@ -9,7 +9,8 @@ class HealthRegistration(models.Model):
     gender = models.CharField(max_length=10)
     contact_number = models.CharField(max_length=15)
     email = models.EmailField()
-    pincode = models.CharField()  # This field MUST be here
+    pincode = models.CharField(max_length=10)
+ # This field MUST be here
     residential_address = models.TextField()
     known_allergies = models.TextField(blank=True)
     existing_conditions = models.TextField(blank=True)

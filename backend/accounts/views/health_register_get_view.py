@@ -6,7 +6,7 @@ from accounts.models import HealthRegistration
 def health_register_get_view(request):
     if request.method == 'GET':
         try:
-            health = HealthRegistration.objects.get(user=request.user)
+            health = HealthRegistration.objects.filter(user=request.user).latest('registered_at')
             data = {
                 "full_name": health.full_name,
                 "date_of_birth": str(health.date_of_birth),

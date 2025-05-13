@@ -1,3 +1,2 @@
 from django.contrib import admin
-
-# Register your models here.
+# Remove unused imports and admin configuration
