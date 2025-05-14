@@ -1,12 +1,16 @@
 import csv
+import os
 from django.core.management.base import BaseCommand
 from specialist.models import Specialist
+from django.conf import settings  # ✅ Add this
 
 class Command(BaseCommand):
     help = 'Import specialists from data007.csv'
 
     def handle(self, *args, **kwargs):
-        with open('data007.csv', newline='', encoding='utf-8') as csvfile:
+        file_path = os.path.join(settings.BASE_DIR, 'data007.csv')  # ✅ Use absolute path
+
+        with open(file_path, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 Specialist.objects.create(
@@ -15,8 +19,8 @@ class Command(BaseCommand):
                     gender=row['gender'],
                     npi=row['npi'],
                     license=row['credential'],
-                    phone='N/A',  # Not available in current CSV
-                    address=f"{row['practice_address_street']}, {row['practice_address_city']}, {row['practice_address_state']} {row['practice_address_zip']}",
-                    specialty=row['specialty_description']
+                    phone=row.get('phone', ''),
+                    address=row.get('practice_address_street', ''),
+                    specialty=row['specialty_description'],
                 )
         self.stdout.write(self.style.SUCCESS('✅ Successfully imported specialists'))
