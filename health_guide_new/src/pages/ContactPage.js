@@ -18,7 +18,7 @@ const ContactPage = () => {
     {
       icon: '📍',
       title: 'Location',
-      content: 'San Jose, CA',
+      content: 'Santa Clara, CA',
       delay: 0.3
     }
   ];
