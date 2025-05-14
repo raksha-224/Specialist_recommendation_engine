@@ -1,6 +1,6 @@
 import csv
 from django.core.management.base import BaseCommand
-from specialist.models import Specialist  # ✅ import your model
+from specialist.models import Specialist
 
 class Command(BaseCommand):
     help = 'Import specialists from data007.csv'
@@ -10,13 +10,16 @@ class Command(BaseCommand):
             reader = csv.DictReader(csvfile)
             for row in reader:
                 Specialist.objects.create(
-                    specialist_id=row['specialist_id'],
-                    name=row['name'],
-                    gender=row['gender'],
                     npi=row['npi'],
-                    license=row['license'],
-                    phone=row['phone'],
-                    address=row['address'],
-                    specialty=row['specialty'],
+                    name=row['full_name'],
+                    credential=row['credential'],
+                    gender=row['gender'],
+                    organization=row['affiliated_organization'],
+                    street=row['practice_address_street'],
+                    city=row['practice_address_city'],
+                    state=row['practice_address_state'],
+                    zip=row['practice_address_zip'],
+                    phone=row.get('telephone_number', ''),  # optional safety
+                    license=row.get('medical_license_number', ''),
                 )
         self.stdout.write(self.style.SUCCESS('✅ Successfully imported specialists'))
