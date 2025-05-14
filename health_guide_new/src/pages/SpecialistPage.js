@@ -21,15 +21,20 @@ const SpecialistPage = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
+  const [offset, setOffset] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
+  const limit = 5;
 
-  const fetchSpecialists = async () => {
+  const fetchSpecialists = async (reset = false) => {
     setLoading(true);
     setMessage('');
-    
+
+    const currentOffset = reset ? 0 : offset;
+
     try {
       const csrfToken = getCookie('csrftoken');
-      
-      const response = await fetch('http://localhost:8000/specialist/', {
+
+      const response = await fetch(`http://localhost:8000/specialist/?limit=${limit}&offset=${currentOffset}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -41,12 +46,21 @@ const SpecialistPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        setSpecialists(data);
+        if (reset) {
+          setSpecialists(data);
+        } else {
+          setSpecialists(prev => [...prev, ...data]);
+        }
+
+        setHasMore(data.length === limit);
+        setOffset(currentOffset + data.length);
       } else {
         setMessage("Error loading specialists");
+        setHasMore(false);
       }
     } catch (error) {
       setMessage("Network error. Please try again.");
+      setHasMore(false);
       console.error(error);
     } finally {
       setLoading(false);
@@ -54,7 +68,7 @@ const SpecialistPage = () => {
   };
 
   useEffect(() => {
-    fetchSpecialists();
+    fetchSpecialists(true);
   }, []);
 
   const filteredSpecialists = specialists.filter(spec =>
@@ -70,11 +84,17 @@ const SpecialistPage = () => {
         type="text"
         placeholder="Search by name or specialty..."
         value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        onChange={(e) => {
+          setSearchTerm(e.target.value);
+        }}
         className="search-input"
       />
 
-      <button onClick={fetchSpecialists} disabled={loading} className="refresh-btn">
+      <button
+        onClick={() => fetchSpecialists(true)}
+        disabled={loading}
+        className="refresh-btn"
+      >
         {loading ? 'Refreshing...' : 'Refresh List'}
       </button>
 
@@ -93,6 +113,11 @@ const SpecialistPage = () => {
               </li>
             ))}
           </ul>
+          {hasMore && (
+            <button onClick={() => fetchSpecialists()} disabled={loading} className="load-more-btn">
+              {loading ? 'Loading...' : 'Load More'}
+            </button>
+          )}
         </div>
       ) : (
         !loading && <p>No specialists found matching your search.</p>
