@@ -18,27 +18,19 @@ function getCookie(name) {
 
 const SpecialistPage = () => {
   const [specialists, setSpecialists] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
-  const [offset, setOffset] = useState(0);
-  const [hasMore, setHasMore] = useState(true);
-  const limit = 5;
 
-  const fetchSpecialists = async (reset = false) => {
-    setLoading(true);
-    setMessage('');
-
-    const currentOffset = reset ? 0 : offset;
-
+  const fetchRecommendations = async () => {
     try {
       const csrfToken = getCookie('csrftoken');
 
-      const response = await fetch(`http://localhost:8000/specialist/?limit=${limit}&offset=${currentOffset}`, {
+      const response = await fetch(`http://localhost:8000/recommend/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken
+          'X-CSRFToken': csrfToken,
         },
         credentials: 'include'
       });
@@ -46,29 +38,22 @@ const SpecialistPage = () => {
       const data = await response.json();
 
       if (response.ok) {
-        if (reset) {
-          setSpecialists(data);
-        } else {
-          setSpecialists(prev => [...prev, ...data]);
-        }
-
-        setHasMore(data.length === limit);
-        setOffset(currentOffset + data.length);
+        setSpecialists(data.recommended_specialists || []);
+        setMessage(data.message || '');
+        setError('');
       } else {
-        setMessage("Error loading specialists");
-        setHasMore(false);
+        setError(data.error || 'Failed to load recommendations');
+        setSpecialists([]);
       }
-    } catch (error) {
-      setMessage("Network error. Please try again.");
-      setHasMore(false);
-      console.error(error);
-    } finally {
-      setLoading(false);
+    } catch (err) {
+      console.error(err);
+      setError('Network error');
+      setSpecialists([]);
     }
   };
 
   useEffect(() => {
-    fetchSpecialists(true);
+    fetchRecommendations();
   }, []);
 
   const filteredSpecialists = specialists.filter(spec =>
@@ -78,49 +63,32 @@ const SpecialistPage = () => {
 
   return (
     <div className="specialist-container">
-      <h2>Find Medical Specialists</h2>
+      <h2>Recommended Specialists</h2>
+
+      {message && <p className="message">{message}</p>}
+      {error && <p className="error">{error}</p>}
 
       <input
         type="text"
         placeholder="Search by name or specialty..."
         value={searchTerm}
-        onChange={(e) => {
-          setSearchTerm(e.target.value);
-        }}
+        onChange={(e) => setSearchTerm(e.target.value)}
         className="search-input"
       />
 
-      <button
-        onClick={() => fetchSpecialists(true)}
-        disabled={loading}
-        className="refresh-btn"
-      >
-        {loading ? 'Refreshing...' : 'Refresh List'}
-      </button>
-
-      {message && <p style={{ color: 'red' }}>{message}</p>}
-
       {filteredSpecialists.length > 0 ? (
-        <div className="results-box">
-          <h4>Available Specialists:</h4>
-          <ul className="specialist-list">
-            {filteredSpecialists.map((spec) => (
-              <li key={spec.npi} className="specialist-item">
-                <strong>{spec.full_name}</strong>
-                <p>Specialty: {spec.specialty_description}</p>
-                <p>Location: {spec.practice_address_city}, {spec.practice_address_state}, {spec.practice_address_zip}</p>
-                <p>Organization: {spec.affiliated_organizations}</p>
-              </li>
-            ))}
-          </ul>
-          {hasMore && (
-            <button onClick={() => fetchSpecialists()} disabled={loading} className="load-more-btn">
-              {loading ? 'Loading...' : 'Load More'}
-            </button>
-          )}
-        </div>
+        <ul className="specialist-list">
+          {filteredSpecialists.map((spec) => (
+            <li key={spec.npi} className="specialist-item">
+              <strong>{spec.full_name}</strong>
+              <p>Specialty: {spec.specialty_description}</p>
+              <p>Location: {spec.practice_address_city}, {spec.practice_address_state}, {spec.practice_address_zip}</p>
+              <p>Organization: {spec.affiliated_organizations}</p>
+            </li>
+          ))}
+        </ul>
       ) : (
-        !loading && <p>No specialists found matching your search.</p>
+        <p>No matching specialists found.</p>
       )}
     </div>
   );
