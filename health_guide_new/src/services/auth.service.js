@@ -28,9 +28,8 @@ const register = async (username, email, password1, password2) => {
             password2
         }, {
             headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            withCredentials: true
+              'Content-Type': 'application/json'
+            }
         });
         return response.data;
     } catch (error) {
