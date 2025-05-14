@@ -26,7 +26,7 @@ const SpecialistPage = () => {
     try {
       const csrfToken = getCookie('csrftoken');
 
-      const response = await fetch(`https://your-backend.onrender.com/recommend/`, {
+      const response = await fetch(`https://specialist-recommendation-engine.onrender.com/recommend/`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
