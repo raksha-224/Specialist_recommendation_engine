@@ -17,7 +17,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'rest_framework',
-    'rest_framework.authtoken',        # ✅ Added for token support
+    'rest_framework.authtoken',        
     'predictor.apps.PredictorConfig',
     'accounts',
     'specialist'
@@ -27,7 +27,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'corsheaders.middleware.CorsMiddleware',         # ✅ Must be early
+    'corsheaders.middleware.CorsMiddleware',         
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -93,7 +93,7 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
-    "http://localhost:3000",  # ✅ React app origin
+    "http://localhost:3000",  
 ]
 
 # CORS setup
