@@ -33,7 +33,7 @@ const RegisterPage = ({ setIsLoggedIn }) => {
       return;
     }
 
-    try {
+        try {
       await authService.register(
         formData.username,
         formData.email,
@@ -41,16 +41,20 @@ const RegisterPage = ({ setIsLoggedIn }) => {
         formData.password2
       );
       
-      // Auto-login after successful registration
       await authService.login(formData.username, formData.password1);
       setIsLoggedIn(true);
       navigate("/health-form");
+
     } catch (error) {
-      setErrorMessage(error.message || 'Registration failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
-  };
+      const errorData = error?.response?.data;
+
+      if (errorData) {
+        const firstKey = Object.keys(errorData)[0];
+        setErrorMessage(errorData[firstKey][0] || 'Registration failed.');
+      } else {
+        setErrorMessage('Registration failed. Please try again.');
+      }
+    };
 
   return (
     <div className="container">
