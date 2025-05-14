@@ -105,10 +105,14 @@ CORS_ALLOWED_ORIGINS = [
 # DRF Authentication
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.TokenAuthentication',  # ✅ Token-based auth
         'rest_framework.authentication.SessionAuthentication',
-        'rest_framework.authentication.TokenAuthentication',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Optional, but good for clarity
     ]
 }
+
 
 # Email Configuration
 if DEBUG:
