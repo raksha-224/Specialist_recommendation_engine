@@ -24,4 +24,7 @@ yarn-error.log*
 # Distribution / packaging
 dist/
 build/
-*.egg-info/ 
+*.egg-info/
+
+# Zip files
+*.zip 
