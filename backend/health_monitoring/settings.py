@@ -99,7 +99,7 @@ CSRF_TRUSTED_ORIGINS = [
 # CORS setup
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "https://health-guide-new.onrender.com",
+    "https://health-guide-new.onrender.com",  
 ]
 
 # DRF Authentication
