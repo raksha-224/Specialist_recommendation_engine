@@ -14,13 +14,15 @@ class Command(BaseCommand):
             reader = csv.DictReader(csvfile)
             for row in reader:
                 Specialist.objects.create(
-                    specialist_id=row['npi'],
-                    name=row['full_name'],
-                    gender=row['gender'],
                     npi=row['npi'],
-                    license=row['credential'],
-                    phone=row.get('phone', ''),
-                    address=row.get('practice_address_street', ''),
-                    specialty=row['specialty_description'],
+                    full_name=row['full_name'],
+                    credential=row['credential'],
+                    gender=row['gender'],
+                    affiliated_organization=row['affiliated_organization'],
+                    practice_address_street=row['practice_address_street'],
+                    practice_address_city=row['practice_address_city'],
+                    practice_address_zip=row['practice_address_zip'],
+                    practice_address_state=row['practice_address_state'],
+                    specialty_description=row['specialty_description'],
                 )
         self.stdout.write(self.style.SUCCESS('✅ Successfully imported specialists'))
