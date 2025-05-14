@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-const API_URL = 'https://health-monitoring.onrender.com/accounts/';
+const API_URL = 'https://specialist-recommendation-engine.onrender.com/accounts/';
 
 // Function to get a cookie by name
 export function getCookie(name) {
