@@ -33,10 +33,10 @@ disease_categories = {
         ]
     },
     "Gastrointestinal & Liver Disorders": {
-        "specialist": ["Gastroenterologist", "Hepatologist", "General Surgeon"],
+        "specialist": ["Gastroenterologist", "Hepatologist"],
         "examples": [
             "GERD", "Hepatitis", "Cirrhosis", "Ulcerative colitis", "Crohn disease",
-            "Gallstones", "Appendicitis", "Liver cancer", "Pancreatitis", "IBS", "Constipation", "infectious gastroenteritis"
+            "Gallstones", "Appendicitis", "Liver cancer", "Pancreatitis", "IBS", "Constipation", "infectious gastroenteritis","irritable bowel syndrome","intestinal obstruction","hiatal hernia"
         ]
     },
     "Pediatric Disorders": {
@@ -101,14 +101,14 @@ disease_categories = {
   "pityriasis rosea",
   "psoriasis",
   "skin disorder",
-  "viral warts"
+  "viral warts","pterygium","atrophic skin condition","seborrheic dermatitis"
 ]
     },
     "Ophthalmologic Conditions": {
         "specialist": ["Ophthalmologist"],
         "examples": [
             "Glaucoma", "Cataract", "Macular degeneration", "Retinal detachment",
-            "Conjunctivitis", "Uveitis", "Vitreous hemorrhage"
+            "Conjunctivitis", "Uveitis", "Vitreous hemorrhage","blepharitis","conjunctivitis due to allergy","cornea infection"
         ]
     },
     "ENT Conditions": {
