@@ -45,9 +45,8 @@ const login = async (username, password) => {
             password
         }, {
             headers: {
-                'X-CSRFToken': getCookie('csrftoken')
-            },
-            withCredentials: true
+              'Content-Type': 'application/json'
+            }
         });
 
         if (response.data) {
