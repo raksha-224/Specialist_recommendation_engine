@@ -27,4 +27,11 @@ build/
 *.egg-info/
 
 # Zip files
-*.zip 
+*.zip
+
+# Environment variables
+.env
+
+# Additional files to exclude
+*.joblib
+*.csv 
