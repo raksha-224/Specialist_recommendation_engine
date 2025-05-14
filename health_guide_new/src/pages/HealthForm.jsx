@@ -38,7 +38,6 @@ const HealthForm = () => {
             "Content-Type": "application/json",
             Authorization: `Token ${token}`,
           },
-          credentials: "include",
           body: JSON.stringify(formData),
         }
       );
