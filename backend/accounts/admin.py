@@ -1,2 +1,4 @@
 from django.contrib import admin
-# Remove unused imports and admin configuration
+from .models import HealthRegistration
+
+admin.site.register(HealthRegistration)
