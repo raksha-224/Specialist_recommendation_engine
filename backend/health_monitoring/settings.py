@@ -58,11 +58,11 @@ WSGI_APPLICATION = 'health_monitoring.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.environ.get('DB_NAME'),
-        'USER': os.environ.get('DB_USER'),
-        'PASSWORD': os.environ.get('DB_PASSWORD'),
-        'HOST': os.environ.get('DB_HOST'),
-        'PORT': os.environ.get('DB_PORT', '5432'),
+        'NAME': 'healthdb_jz62',
+        'USER': 'healthadmin',
+        'PASSWORD': 'lqZTSBoakicrNxcUPvQ04fu1XATUUsaC',
+        'HOST': 'dpg-d0i6tomuk2gs738k3i60-a',
+        'PORT': '5432',
     }
 }
 
