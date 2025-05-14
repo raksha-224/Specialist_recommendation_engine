@@ -18,7 +18,7 @@ class Command(BaseCommand):
                     full_name=row['full_name'],
                     credential=row['credential'],
                     gender=row['gender'],
-                    affiliated_organization=row['affiliated_organization'],
+                    affiliated_organizations=row['affiliated_organization'],
                     practice_address_street=row['practice_address_street'],
                     practice_address_city=row['practice_address_city'],
                     practice_address_zip=row['practice_address_zip'],
