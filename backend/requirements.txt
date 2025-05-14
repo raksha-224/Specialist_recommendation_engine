@@ -6,3 +6,4 @@ scikit-learn
 django-cors-headers
 djangorestframework
 sentence-transformers
+psycopg2-binary
