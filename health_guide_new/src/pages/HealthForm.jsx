@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // ✅ Import for navigation
+import { useNavigate } from "react-router-dom";
 
 const HealthForm = () => {
   const [formData, setFormData] = useState({
@@ -17,7 +17,7 @@ const HealthForm = () => {
   });
 
   const [message, setMessage] = useState("");
-  const navigate = useNavigate(); // ✅ Hook for redirecting to prediction page
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,15 +27,21 @@ const HealthForm = () => {
     e.preventDefault();
     setMessage("");
 
+    const token = localStorage.getItem("token");
+
     try {
-      const response = await fetch("http://localhost:8000/accounts/health/register/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
+      const response = await fetch(
+        "https://specialist-recommendation-engine.onrender.com/accounts/health/register/",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Token ${token}`,
+          },
+          credentials: "include",
+          body: JSON.stringify(formData),
+        }
+      );
 
       const result = await response.json();
 
@@ -55,7 +61,12 @@ const HealthForm = () => {
           past_surgeries: "",
         });
       } else {
-        setMessage("❌ Error: " + JSON.stringify(result.errors || result.message));
+        setMessage(
+          "❌ Error: " +
+            (result.errors
+              ? JSON.stringify(result.errors)
+              : result.message || "Unknown error")
+        );
       }
     } catch (error) {
       setMessage("❌ Error submitting form: " + error.message);
@@ -118,7 +129,6 @@ const HealthForm = () => {
         </p>
       )}
 
-      {/* ✅ Redirect to prediction page after success */}
       {message.startsWith("✅") && (
         <div style={{ textAlign: "center", marginTop: "20px" }}>
           <button
