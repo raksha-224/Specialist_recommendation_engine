@@ -23,9 +23,9 @@ const PredictionPage = () => {
   const [alternatives, setAlternatives] = useState([]);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-  const [specialists, setSpecialists] = useState([]);  // State for specialists
+  const [specialists, setSpecialists] = useState([]);
 
-  // UseEffect to track changes in specialists (for debugging purposes)
+  // Debug: track changes to specialists
   useEffect(() => {
     console.log("Specialists updated:", specialists);
   }, [specialists]);
@@ -39,19 +39,19 @@ const PredictionPage = () => {
     setLoading(true);
     setPrediction('');
     setAlternatives([]);
-    setSpecialists([]);  // Reset specialists
+    setSpecialists([]);
     setMessage('');
 
     try {
-      const csrfToken = getCookie('csrftoken');  // ✅ Read CSRF token
+      const csrfToken = getCookie('csrftoken');
 
       const response = await fetch('http://localhost:8000/api/predict/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'X-CSRFToken': csrfToken  // ✅ Send CSRF token
+          'X-CSRFToken': csrfToken
         },
-        credentials: 'include',      // ✅ Send session cookie
+        credentials: 'include',
         body: JSON.stringify({ text: symptoms }),
       });
 
@@ -61,20 +61,23 @@ const PredictionPage = () => {
         setPrediction(data.top_prediction || 'No prediction returned');
         setAlternatives(data.alternatives || []);
 
-        // Now fetch specialists based on the prediction
-        const specialistResponse = await fetch(`http://localhost:8000/recommend/?disease=${data.top_prediction}`, {
+        // ✅ Fixed: correct endpoint + limit to 3 specialists
+        const specialistResponse = await fetch('http://localhost:8000/specialist/recommend/?limit=3', {
           method: 'GET',
           headers: {
-            'X-CSRFToken': csrfToken,  // Send CSRF token for recommendation
+            'X-CSRFToken': csrfToken
           },
-          credentials: 'include', // Include session cookie
+          credentials: 'include'
         });
 
         const specialistData = await specialistResponse.json();
-        console.log(specialistData); // Debugging: Log the specialist data
+        console.log(specialistData);  // DEBUG
 
-        if (specialistResponse.ok) {
-          setSpecialists(specialistData.recommended_specialists || []);  // Set specialist data if available
+        if (specialistResponse.ok && specialistData.recommended_specialists?.length > 0) {
+          setSpecialists(specialistData.recommended_specialists);
+          if (specialistData.message) {
+            setMessage(specialistData.message);  // fallback message from backend
+          }
         } else {
           setMessage("❌ No specialists found for this disease.");
         }
@@ -105,7 +108,7 @@ const PredictionPage = () => {
         {loading ? 'Predicting...' : 'Get Prediction'}
       </button>
 
-      {message && <p style={{ color: 'red' }}>{message}</p>}
+      {message && !specialists.length && <p style={{ color: 'red' }}>{message}</p>}
 
       {prediction && (
         <div className="result-box">
@@ -127,10 +130,10 @@ const PredictionPage = () => {
         </div>
       )}
 
-      {/* Display specialists only after prediction is made */}
-      {prediction && specialists.length > 0 ? (
+      {prediction && specialists.length > 0 && (
         <div className="specialist-recommendation">
           <h4>Recommended Specialists:</h4>
+          {message && <p style={{ color: 'green' }}>{message}</p>}
           <ul>
             {specialists.map((specialist, index) => (
               <li key={index}>
@@ -140,8 +143,6 @@ const PredictionPage = () => {
             ))}
           </ul>
         </div>
-      ) : (
-        prediction && <p>No specialists found for this disease.</p> // Show this only if a prediction has been made
       )}
     </div>
   );
