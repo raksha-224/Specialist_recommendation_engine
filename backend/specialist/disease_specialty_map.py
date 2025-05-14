@@ -36,7 +36,7 @@ disease_categories = {
         "specialist": ["Gastroenterologist", "Hepatologist", "General Surgeon"],
         "examples": [
             "GERD", "Hepatitis", "Cirrhosis", "Ulcerative colitis", "Crohn disease",
-            "Gallstones", "Appendicitis", "Liver cancer", "Pancreatitis", "IBS", "Constipation","infectious gastroenteritis"
+            "Gallstones", "Appendicitis", "Liver cancer", "Pancreatitis", "IBS", "Constipation", "infectious gastroenteritis"
         ]
     },
     "Pediatric Disorders": {
@@ -85,9 +85,24 @@ disease_categories = {
     "Dermatologic Conditions": {
         "specialist": ["Dermatologist"],
         "examples": [
-            "Acne", "Psoriasis", "Eczema", "Vitiligo", "Fungal infections",
-            "Skin cancer", "Lichen planus", "Alopecia"
-        ]
+  "Acne",
+  "Eczema",
+  "Fungal infections",
+  "Lichen planus",
+  "Skin cancer",
+  "Vitiligo",
+  "actinic keratosis",
+  "alopecia",
+  "atrophic skin condition",
+  "fungal infection of the hair",
+  "hyperhidrosis",
+  "itching of unknown cause",
+  "pemphigus",
+  "pityriasis rosea",
+  "psoriasis",
+  "skin disorder",
+  "viral warts"
+]
     },
     "Ophthalmologic Conditions": {
         "specialist": ["Ophthalmologist"],
@@ -113,20 +128,26 @@ disease_categories = {
     "Dental & Oral Conditions": {
         "specialist": ["Dentist", "Oral Surgeon"],
         "examples": [
-            "Tooth abscess", "Dental caries", "Gingivitis", "Oral thrush", "TMJ disorders"
-        ]
+  "Cellulitis or abscess of mouth",
+  "Gingivitis",
+  "Oral thrush",
+  "TMJ disorders",
+  "Teething syndrome",
+  "dental caries",
+  "oral leukoplakia"
+  "tooth abscess",
+  "tooth disorder"
+]
     }
 }
 
-# Example: Displaying all categories with their specialists
-for category, details in disease_categories.items():
-    print(f"\n{category}:\n  Specialists: {', '.join(details['specialist'])}")
-    print("  Conditions:")
-    for condition in details["examples"]:
-        print(f"    - {condition}")
-
+# Build mapping: disease → specialists
 DISEASE_TO_SPECIALTY = {}
-
 for category, data in disease_categories.items():
     for disease in data['examples']:
         DISEASE_TO_SPECIALTY[disease.lower()] = data['specialist']
+
+# Helper function to return specialists with fallback
+def get_specialists_for_disease(disease_name: str):
+    normalized = disease_name.strip().lower()
+    return DISEASE_TO_SPECIALTY.get(normalized, ["Physician"])
