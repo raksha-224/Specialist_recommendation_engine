@@ -25,7 +25,6 @@ const PredictionPage = () => {
   const [message, setMessage] = useState('');
   const [specialists, setSpecialists] = useState([]);
 
-  // Debug: track changes to specialists
   useEffect(() => {
     console.log("Specialists updated:", specialists);
   }, [specialists]);
@@ -45,6 +44,7 @@ const PredictionPage = () => {
     try {
       const csrfToken = getCookie('csrftoken');
 
+      // Step 1: Get prediction
       const response = await fetch('http://localhost:8000/api/predict/', {
         method: 'POST',
         headers: {
@@ -61,7 +61,7 @@ const PredictionPage = () => {
         setPrediction(data.top_prediction || 'No prediction returned');
         setAlternatives(data.alternatives || []);
 
-        // ✅ Fixed: correct endpoint + limit to 3 specialists
+        // Step 2: Fetch recommended specialists
         const specialistResponse = await fetch('http://localhost:8000/specialist/recommend/?limit=3', {
           method: 'GET',
           headers: {
@@ -71,13 +71,13 @@ const PredictionPage = () => {
         });
 
         const specialistData = await specialistResponse.json();
-        console.log(specialistData);  // DEBUG
+        console.log("Specialists response:", specialistData);
 
         if (specialistResponse.ok && specialistData.recommended_specialists?.length > 0) {
-          setSpecialists(specialistData.recommended_specialists);
-          if (specialistData.message) {
-            setMessage(specialistData.message);  // fallback message from backend
-          }
+          // Ensure only 3 are rendered even if more are sent (extra safety)
+          const limited = specialistData.recommended_specialists.slice(0, 3);
+          setSpecialists(limited);
+          setMessage(specialistData.message || "Here are some specialists who may help.");
         } else {
           setMessage("❌ No specialists found for this disease.");
         }
