@@ -45,7 +45,7 @@ const PredictionPage = () => {
       const csrfToken = getCookie('csrftoken');
 
       // Step 1: Get prediction
-      const response = await fetch('http://localhost:8000/api/predict/', {
+      const response = await fetch('https://specialist-recommendation-engine.onrender.com/api/predict/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -62,7 +62,7 @@ const PredictionPage = () => {
         setAlternatives(data.alternatives || []);
 
         // Step 2: Fetch recommended specialists
-        const specialistResponse = await fetch('http://localhost:8000/specialist/recommend/?limit=3', {
+        const specialistResponse = await fetch('https://specialist-recommendation-engine.onrender.com/specialist/recommend/?limit=3', {
           method: 'GET',
           headers: {
             'X-CSRFToken': csrfToken
