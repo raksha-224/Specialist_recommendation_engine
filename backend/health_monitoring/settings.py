@@ -94,12 +94,14 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:3000",  
+    "https://your-frontend.onrender.com",
 ]
 
 # CORS setup
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:3000",  # frontend (React)
+    "http://localhost:3000",
+    "https://your-frontend.onrender.com",# frontend (React)
 ]
 
 # DRF Authentication
